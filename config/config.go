@@ -12,12 +12,13 @@ import (
 type Config struct {
 	Server ServerConfig
 	MySql  MySqlConfig
+	JWT    JWTConfig
 }
 
 type ServerConfig struct {
 	InternalPort string
 	ExternalPort string
-	RunMode string
+	RunMode      string
 }
 
 type MySqlConfig struct {
@@ -49,10 +50,10 @@ func GetConfig() *Config {
 	cfg, err := ParseConfig(v)
 	envPort := os.Getenv("PORT")
 
-	if envPort != ""{
+	if envPort != "" {
 		cfg.Server.ExternalPort = envPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
-	} else{
+	} else {
 		cfg.Server.ExternalPort = cfg.Server.InternalPort
 		log.Printf("Set external port from environment -> %s", cfg.Server.ExternalPort)
 	}
@@ -91,7 +92,6 @@ func LoadConfig(filename string, fileType string) (*viper.Viper, error) {
 	}
 	return v, nil
 }
-
 
 func getConfigPath(env string) string {
 	if env == "production" {
