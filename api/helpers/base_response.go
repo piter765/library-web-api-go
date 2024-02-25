@@ -1,11 +1,13 @@
 package helpers
 
+import "library-web-api-go/api/validations"
+
 type BaseHttpResponse struct {
-	Result     any        `json:"result"`
-	Success    bool       `json:"success"`
-	ResultCode ResultCode `json:"resultCode"`
-	Error      any        `json:"error"`
-	//validation errors
+	Result           any                            `json:"result"`
+	Success          bool                           `json:"success"`
+	ResultCode       ResultCode                     `json:"resultCode"`
+	Error            any                            `json:"error"`
+	ValidationErrors *[]validations.ValidationError `json:"validationErrors"`
 }
 
 func GenerateBaseResponse(result any, success bool, resultCode ResultCode) *BaseHttpResponse {
@@ -31,4 +33,10 @@ func GenerateBaseResponseWithAnyError(result any, success bool, resultCode Resul
 	}
 }
 
-//func for generating response with validation error
+func GenerateBaseResponseWithValidationError(result any, success bool, resultCode ResultCode, err error) *BaseHttpResponse {
+	return &BaseHttpResponse{Result: result,
+		Success:          success,
+		ResultCode:       resultCode,
+		ValidationErrors: validations.GetValidationErrors(err),
+	}
+}
