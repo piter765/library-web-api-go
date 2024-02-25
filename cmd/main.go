@@ -1,7 +1,7 @@
 package main
 
 import (
-	api "library-web-api-go"
+	api "library-web-api-go/api"
 	"library-web-api-go/config"
 	"library-web-api-go/database"
 	"library-web-api-go/database/migrations"
