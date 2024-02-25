@@ -3,6 +3,7 @@ package services
 import (
 	"library-web-api-go/api/dto"
 	"library-web-api-go/config"
+	"library-web-api-go/pkg/service_errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -19,7 +20,7 @@ type tokenDto struct {
 	Username     string
 	Email        string
 	MobileNumber string
-	//roles
+	Roles        []string
 }
 
 func NewTokenService(cfg *config.Config) *TokenService {
@@ -66,6 +67,37 @@ func (s *TokenService) GenerateTokens(token *tokenDto) (*dto.TokenDetail, error)
 	}
 
 	return td, nil
+}
+
+func (s *TokenService) VerifyToken(token string) (*jwt.Token, error) {
+	t, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
+			return nil, &service_errors.ServiceError{EndUserMessage: service_errors.UnexpectedError}
+		}
+		return []byte(s.cfg.JWT.Secret), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return t, nil
+}
+
+func (s *TokenService) GetClaims(token string) (claimMap map[string]interface{}, err error) {
+	claimMap = map[string]interface{}{}
+
+	verifyToken, err := s.VerifyToken(token)
+	if err != nil {
+		return nil, err
+	}
+	claims, ok := verifyToken.Claims.(jwt.MapClaims)
+	if ok && verifyToken.Valid {
+		for k, v := range claims {
+			claimMap[k] = v
+		}
+		return claimMap, nil
+	}
+	return nil, &service_errors.ServiceError{EndUserMessage: service_errors.ClaimsNotFound}
 }
 
 const (
