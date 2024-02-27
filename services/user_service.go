@@ -29,7 +29,7 @@ func (s *UserService) SignIn(req *dto.SignInRequest) (*dto.TokenDetail, error) {
 	var user models.User
 	err := s.database.
 		Model(&models.User{}).
-		Where("email: ?", req.Email).
+		Where("email = ?", req.Email).
 		Preload("UserRoles", func(tx *gorm.DB) *gorm.DB {
 			return tx.Preload("Role")
 		}).

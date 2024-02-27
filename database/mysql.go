@@ -17,7 +17,7 @@ func InitDb(cfg *config.Config) error {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 			cfg.MySql.User, cfg.MySql.Password, cfg.MySql.Host, cfg.MySql.Port, cfg.MySql.DbName)
 
-	dbClient, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dbClient, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 			return err
 	}

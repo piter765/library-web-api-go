@@ -23,6 +23,8 @@ func createTables(database *gorm.DB) {
 	tables := []interface{}{}
 
 	tables = addNewTable(database, models.User{}, tables)
+	tables = addNewTable(database, models.Role{}, tables)
+	tables = addNewTable(database, models.UserRole{}, tables)
 
 	err := database.Migrator().CreateTable(tables...)
 	if err != nil {
@@ -59,7 +61,8 @@ func createRoleIfNotExists(database *gorm.DB, r *models.Role) {
 	database.
 		Model(&models.Role{}).
 		Select("1").
-		Where("name = ?", r.Name).First(&exists)
+		Where("name = ?", r.Name).
+		First(&exists)
 	if exists == 0 {
 		database.Create(r)
 	}
@@ -68,12 +71,13 @@ func createRoleIfNotExists(database *gorm.DB, r *models.Role) {
 func createAdminUserIfNotExists(database *gorm.DB, u *models.User, roleId int) {
 	exists := 0
 	database.
-		Model(&models.Role{}).
+		Model(&models.User{}).
 		Select("1").
-		Where("name = ?", roleId).First(&exists)
+		Where("email = ?", u.Email).
+		First(&exists)
 	if exists == 0 {
 		database.Create(u)
 		ur := models.UserRole{UserId: u.Id, RoleId: roleId}
-		database.Create(ur)
+		database.Create(&ur)
 	}
 }
