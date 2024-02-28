@@ -4,6 +4,7 @@ import (
 	"library-web-api-go/consts"
 	"library-web-api-go/database"
 	"library-web-api-go/models"
+	"time"
 
 	"fmt"
 
@@ -16,6 +17,7 @@ func Up_1() {
 
 	createTables(database)
 	createDefaultUserInformation(database)
+	createAuthorWithBooks(database)
 
 }
 
@@ -48,7 +50,7 @@ func createDefaultUserInformation(database *gorm.DB) {
 
 	u := models.User{Username: consts.DefaultUserName, FirstName: "Test", LastName: "Test",
 		MobileNumber: "123456789", Email: "admin@admin.com"}
-	
+
 	password := "test1234"
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	u.Password = string(hashedPassword)
@@ -79,5 +81,32 @@ func createAdminUserIfNotExists(database *gorm.DB, u *models.User, roleId int) {
 		database.Create(u)
 		ur := models.UserRole{UserId: u.Id, RoleId: roleId}
 		database.Create(&ur)
+	}
+}
+
+func createAuthorWithBooks(database *gorm.DB) {
+	count := 0
+	database.
+		Model(&models.Author{}).
+		Select("count(*)").
+		Find(&count)
+	if count == 0 {
+		database.Create(&models.Author{
+			FirstName:   "George",
+			LastName:    "Martin",
+			DateOfBirth: time.Date(1960, time.January, 2, 15, 4, 5, 0, time.Local),
+			Books: []*models.Book{
+				{
+					Name:          "Book 1",
+					NumberOfPages: 100,
+					Description:   "Description for Book 1",
+				},
+				{
+					Name:          "Book 2",
+					NumberOfPages: 150,
+					Description:   "Description for Book 2",
+				},
+			},
+		})
 	}
 }
