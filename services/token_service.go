@@ -58,7 +58,7 @@ func (s *TokenService) GenerateTokens(token *tokenDto) (*dto.TokenDetail, error)
 	rtc[UserIdKey] = token.UserId
 	rtc[ExpireTimeKey] = td.RefreshTokenExpireTime
 
-	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, atc)
+	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtc)
 
 	td.RefreshToken, err = rt.SignedString([]byte(s.cfg.JWT.RefreshSecret))
 

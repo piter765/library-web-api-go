@@ -42,7 +42,7 @@ func (s *BaseService[T, Tc, Tu, Tr]) Create(ctx context.Context, req *Tc) (*Tr, 
 	}
 	tx.Commit()
 	bm, _ := common.TypeConverter[models.BaseModel](model)
-	return s.GetById(ctx, bm.Id)
+	return s.GetById(bm.Id)
 }
 
 func (s *BaseService[T, Tc, Tu, Tr]) Update(ctx context.Context, id int, req *Tu) (*Tr, error) {
@@ -62,7 +62,7 @@ func (s *BaseService[T, Tc, Tu, Tr]) Update(ctx context.Context, id int, req *Tu
 								return nil, err
 							}
 	tx.Commit()
-	return s.GetById(ctx, id)
+	return s.GetById(id)
 }
 
 func (s *BaseService[T, Tc, Tu, Tr]) Delete(ctx context.Context, id int) error {
@@ -86,7 +86,7 @@ func (s *BaseService[T, Tc, Tu, Tr]) Delete(ctx context.Context, id int) error {
 	return nil
 }
 
-func (s *BaseService[T, Tc, Tu, Tr]) GetById(ctx context.Context, id int) (*Tr, error) {
+func (s *BaseService[T, Tc, Tu, Tr]) GetById(id int) (*Tr, error) {
 	model := new(T)
 	db := Preload(s.Database, s.Preloads)
 	err := db.Where("id = ? and deleted_at is null", id).
