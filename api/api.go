@@ -28,9 +28,11 @@ func RegisterRoutes(r *gin.Engine, cfg *config.Config) {
 
 	v1 := api.Group("v1")
 	{
-		//User 
 		users := v1.Group("/users")
+		authors := v1.Group("/authors")
+
 
 		routers.User(users, cfg)
+		routers.Author(authors, cfg)
 	}
 }
