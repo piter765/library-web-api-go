@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"library-web-api-go/api/helpers"
 	"net/http"
 	"strconv"
@@ -13,6 +14,7 @@ func Create[Ti any, To any](c *gin.Context, caller func(ctx context.Context, req
 	req := new(Ti)
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
+		fmt.Println("Validation error")
 		c.AbortWithStatusJSON(http.StatusBadRequest,
 			helpers.GenerateBaseResponseWithValidationError(nil, false, helpers.ValidationError, err))
 		return

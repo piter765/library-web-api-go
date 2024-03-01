@@ -22,6 +22,7 @@ func GetValidationErrors(err error) *[]ValidationError {
 			el.Property = err.Field()
 			el.Tag = err.Tag()
 			el.Value = err.Param()
+			el.Message = err.Error()
 			validationErrors = append(validationErrors, el)
 		}
 		return &validationErrors

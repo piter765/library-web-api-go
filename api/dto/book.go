@@ -1,9 +1,9 @@
 package dto
 
 type CreateBookRequest struct {
-	Name          string `json:"name" binding:"required,alpha,min=1,max=50"`
+	Name          string `json:"name" binding:"required,min=1,max=50"`
 	NumberOfPages int    `json:"numberOfPages" binding:"max=5000"`
-	Description   string `json:"description" binding:"alpha,min=10,max=250"`
+	Description   string `json:"description" binding:"min=10,max=250"`
 	AuthorId      int    `json:"authorId" binding:"required:true"`
 }
 

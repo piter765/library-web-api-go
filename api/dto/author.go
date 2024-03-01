@@ -19,5 +19,5 @@ type AuthorResponse struct {
 	FirstName   string       `json:"firstName"`
 	LastName    string       `json:"lastName"`
 	DateOfBirth time.Time    `json:"dateOfBirth"` //it is better not to use omitempty with time.Time because it would be interpreted as the zero value of time.Time, which is January 1, year 1, UTC
-	Books       BookResponse `json:"books,omitempty"`
+	Books       []BookResponse `json:"books,omitempty"`
 }

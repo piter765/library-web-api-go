@@ -28,6 +28,10 @@ func createTables(database *gorm.DB) {
 	tables = addNewTable(database, models.Role{}, tables)
 	tables = addNewTable(database, models.UserRole{}, tables)
 
+	tables = addNewTable(database, models.Author{}, tables)
+
+	tables = addNewTable(database, models.Book{}, tables)
+
 	err := database.Migrator().CreateTable(tables...)
 	if err != nil {
 		fmt.Println("Error creating the tables in database")
@@ -94,7 +98,7 @@ func createAuthorWithBooks(database *gorm.DB) {
 		database.Create(&models.Author{
 			FirstName:   "George",
 			LastName:    "Martin",
-			DateOfBirth: time.Date(1960, time.January, 2, 15, 4, 5, 0, time.Local),
+			DateOfBirth: time.Date(1960, time.January, 2, 15, 4, 5, 0, time.Local), //should change the date
 			Books: []*models.Book{
 				{
 					Name:          "Book 1",

@@ -16,7 +16,7 @@ func NewAuthorService(cfg *config.Config) *AuthorService { //config needed for l
 	return &AuthorService{
 		base: &BaseService[models.Author, dto.CreateAuthorRequest, dto.UpdateAuthorRequest, dto.AuthorResponse]{
 			Database: database.GetDb(),
-			Preloads: []preload{{string: "Book"}},
+			Preloads: []preload{{string: "Books"}},
 		},
 	}
 }
